@@ -16,6 +16,7 @@ public slots:
     void slotLoad();
     void slotSave();
     void slotSaveAs();
+    void slotTextColor();
 };
 
 #endif // DOWCWINDOW_H

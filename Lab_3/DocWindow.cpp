@@ -1,7 +1,10 @@
 #include "DocWindow.h"
 #include <QFileDialog>
 #include <QMessageBox>
-DocWindow_Scherba::DocWindow_Scherba(QWindget* pwgt): QTextEdit(pwgt)
+#include <QTextStream>
+#include <QColorDialog>
+
+DocWindow_Scherba::DocWindow_Scherba(QWidget* pwgt): QTextEdit(pwgt)
 {
 
 }
@@ -22,19 +25,32 @@ void DocWindow_Scherba::slotLoad()
     }
 }
 
-void DocWindow_Scherba::slotSave()
+void DocWindow_Scherba::slotSaveAs()
 {
     QString str = QFileDialog::getSaveFileName(0, m_strFileName);
-    if (!str.isEmpty()){
+    if(!str.isEmpty())
+    {
         m_strFileName=str;
+        slotSave();
+    }
+}
+
+void DocWindow_Scherba::slotSave()
+{
+    if (m_strFileName.isEmpty()){
+        slotSaveAs();
         return;
     }
-
+    QMessageBox::information(0, "Progress", "Succesful!");
     QFile file(m_strFileName);
     if(file.open(QIODevice::WriteOnly)){
         QTextStream(&file)<<toPlainText();
         file.close();
         emit changeWindowTitle(m_strFileName);
-        QMessageBox::information(0, "Progress", "Succesful!");
     }
+}
+
+void DocWindow_Scherba::slotTextColor(){
+    QColor str = QColorDialog::getColor();
+    setTextColor(str);
 }
